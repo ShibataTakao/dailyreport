@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/shibataka000/daily-report/internal/dailyreport"
+	"github.com/ShibataTakao/daily-report/internal/dailyreport"
 	"github.com/urfave/cli/v2"
 )
 
@@ -20,18 +20,14 @@ func main() {
 				Usage: "Create today's daily report",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
-						Name:     "template",
-						Usage:    "Path to daily report template file",
-						Required: true,
-					},
-					&cli.StringFlag{
-						Name:     "dir",
+						Name:     "path",
 						Usage:    "Path to daily report directory",
 						Required: true,
+						EnvVars:  []string{"DAILYREPORT_PATH"},
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return dailyreport.Create(c.String("template"), c.String("dir"))
+					return dailyreport.Create(c.String("path"))
 				},
 			},
 			{
@@ -39,20 +35,14 @@ func main() {
 				Usage: "Validate worktime in today's daily report",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
-						Name:     "dir",
+						Name:     "path",
 						Usage:    "Path to daily report directory",
 						Required: true,
+						EnvVars:  []string{"DAILYREPORT_PATH"},
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return dailyreport.Validate(c.String("dir"))
-				},
-			},
-			{
-				Name:  "kkms",
-				Usage: "",
-				Action: func(c *cli.Context) error {
-					return dailyreport.KKMS()
+					return dailyreport.Validate(c.String("path"))
 				},
 			},
 		},

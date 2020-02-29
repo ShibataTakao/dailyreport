@@ -1,4 +1,4 @@
-BUILD_TARGET = github.com/shibataka000/daily-report/cmd/dailyreport
+BUILD_TARGET = github.com/ShibataTakao/daily-report/cmd/dailyreport
 FMT_TARGET = $(shell find . -type f -name "*.go")
 LINT_TARGET = $(shell go list ./...)
 TEST_TARGET = ./...

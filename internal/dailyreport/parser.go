@@ -8,24 +8,6 @@ import (
 	"time"
 )
 
-type dailyReport struct {
-	timecard timecard
-	tasks    []task
-}
-
-type timecard struct {
-	begin time.Time
-	end   time.Time
-	rest  time.Duration
-}
-
-type task struct {
-	category   string
-	name       string
-	expectTime time.Duration
-	actualTime time.Duration
-}
-
 func parse(text string) (dailyReport, error) {
 	reBegin := regexp.MustCompile(`- 始業 \d{2}:\d{2}`)
 	reEnd := regexp.MustCompile(`- 終業 \d{2}:\d{2}`)
@@ -103,24 +85,4 @@ func parseTask(s string, category string) (task, error) {
 		expectTime: expect,
 		actualTime: actual,
 	}, nil
-}
-
-func worktimeInTimecard(report dailyReport) time.Duration {
-	return report.timecard.end.Sub(report.timecard.begin.Add(report.timecard.rest))
-}
-
-func expectWorktimeInTask(report dailyReport) time.Duration {
-	d := time.Duration(0)
-	for _, task := range report.tasks {
-		d += task.expectTime
-	}
-	return d
-}
-
-func actualWorktimeInTask(report dailyReport) time.Duration {
-	d := time.Duration(0)
-	for _, task := range report.tasks {
-		d += task.actualTime
-	}
-	return d
 }

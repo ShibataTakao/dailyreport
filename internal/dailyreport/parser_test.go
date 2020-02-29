@@ -6,11 +6,6 @@ import (
 	"time"
 )
 
-type parseTestData struct {
-	text   string
-	expect dailyReport
-}
-
 func TestParse(t *testing.T) {
 	tests := []struct {
 		name string
@@ -132,31 +127,20 @@ func TestParseTask(t *testing.T) {
 		out      task
 	}{
 		{
-			name:     "- [ ] 1.0h/1.5h タスク",
-			category: "カテゴリ",
-			s:        "- [ ] 1.0h/1.5h タスク",
-			out: task{
-				category:   "カテゴリ",
-				name:       "タスク",
-				expectTime: time.Duration(1) * time.Hour,
-				actualTime: time.Duration(1)*time.Hour + time.Duration(30)*time.Minute,
-			},
-		},
-		{
-			name:     "- [x] 1.0h/1.5h タスク",
-			category: "カテゴリ",
-			s:        "- [x] 1.0h/1.5h タスク",
-			out: task{
-				category:   "カテゴリ",
-				name:       "タスク",
-				expectTime: time.Duration(1) * time.Hour,
-				actualTime: time.Duration(1)*time.Hour + time.Duration(30)*time.Minute,
-			},
-		},
-		{
 			name:     "    - [ ] 1.0h/1.5h タスク",
 			category: "カテゴリ",
 			s:        "    - [ ] 1.0h/1.5h タスク",
+			out: task{
+				category:   "カテゴリ",
+				name:       "タスク",
+				expectTime: time.Duration(1) * time.Hour,
+				actualTime: time.Duration(1)*time.Hour + time.Duration(30)*time.Minute,
+			},
+		},
+		{
+			name:     "    - [x] 1.0h/1.5h タスク",
+			category: "カテゴリ",
+			s:        "    - [x] 1.0h/1.5h タスク",
 			out: task{
 				category:   "カテゴリ",
 				name:       "タスク",

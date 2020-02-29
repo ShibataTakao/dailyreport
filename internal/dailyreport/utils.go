@@ -2,15 +2,8 @@ package dailyreport
 
 import (
 	"os"
-	"path/filepath"
 	"time"
 )
-
-func todayDailyReportFilePath(dailyReportDirPath string) string {
-	now := time.Now()
-	filename := now.Format("20060102") + ".md"
-	return filepath.Join(dailyReportDirPath, filename)
-}
 
 func isFileExists(filepath string) bool {
 	_, err := os.Stat(filepath)

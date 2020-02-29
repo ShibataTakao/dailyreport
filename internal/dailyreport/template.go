@@ -1,4 +1,6 @@
-# 日報
+package dailyreport
+
+const dailyReportTemplate = `# 日報
 
 ## 業務時間
 - 始業 09:30
@@ -10,3 +12,4 @@
 ---
 
 # 業務記録
+`
