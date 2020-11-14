@@ -1,6 +1,9 @@
 package dailyreport
 
-import "time"
+import (
+	"sort"
+	"time"
+)
 
 type taskItem struct {
 	category   string
@@ -73,5 +76,6 @@ func (tasks taskItems) aggregated() taskItems {
 			newTasks = append(newTasks, task)
 		}
 	}
+	sort.Slice(newTasks, func(i, j int) bool { return newTasks[i].actualTime > newTasks[j].actualTime })
 	return newTasks
 }
