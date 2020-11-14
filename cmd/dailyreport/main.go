@@ -45,6 +45,31 @@ func main() {
 					return dailyreport.Validate(c.String("path"))
 				},
 			},
+			{
+				Name:  "aggregate",
+				Usage: "Aggregate tasks in some daily reports",
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:     "path",
+						Usage:    "Path to daily report directory",
+						Required: true,
+						EnvVars:  []string{"DAILYREPORT_PATH"},
+					},
+					&cli.StringFlag{
+						Name:     "from",
+						Usage:    "Beginning of date range. Format must be yyyymmdd.",
+						Required: true,
+					},
+					&cli.StringFlag{
+						Name:     "to",
+						Usage:    "End of date range. Format must be yyyymmdd.",
+						Required: true,
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return dailyreport.Aggregate(c.String("path"), c.String("from"), c.String("to"))
+				},
+			},
 		},
 	}
 
