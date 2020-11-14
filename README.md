@@ -26,6 +26,13 @@ $ dailyreport validate
 今日のタスク（実績） = 0.00h
 ```
 
+### Aggregate daily-report
+You can show aggregated tasks for daily-reports in specified date range.
+
+```
+$ dailyreport aggregate --from 20201001 --to 20201031
+```
+
 ## Install
 ```
 make install

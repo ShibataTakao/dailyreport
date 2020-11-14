@@ -8,14 +8,15 @@ import (
 	"time"
 )
 
-func parse(text string) (dailyReport, error) {
+func parse(text string) (timecardItem, taskItems, error) {
 	reBegin := regexp.MustCompile(`- 始業 \d{2}:\d{2}`)
 	reEnd := regexp.MustCompile(`- 終業 \d{2}:\d{2}`)
 	reRest := regexp.MustCompile(`- 休憩 \d{2}:\d{2}`)
 	reCategory := regexp.MustCompile(`- \[.\] (.+)`)
 	reTask := regexp.MustCompile(`- \[.\] \d+\.\d+h/\d+\.\d+h .+`)
 
-	report := dailyReport{}
+	timecard := timecardItem{}
+	tasks := taskItems{}
 	scanner := bufio.NewScanner(strings.NewReader(text))
 	currentCategory := ""
 	for scanner.Scan() {
@@ -23,34 +24,34 @@ func parse(text string) (dailyReport, error) {
 		if reBegin.MatchString(line) {
 			t, err := parseTime(line)
 			if err != nil {
-				return dailyReport{}, err
+				return timecard, tasks, err
 			}
-			report.timecard.begin = t
+			timecard.begin = t
 		} else if reEnd.MatchString(line) {
 			t, err := parseTime(line)
 			if err != nil {
-				return dailyReport{}, err
+				return timecard, tasks, err
 			}
-			report.timecard.end = t
+			timecard.end = t
 		} else if reRest.MatchString(line) {
 			t, err := parseTime(line)
 			if err != nil {
-				return dailyReport{}, err
+				return timecard, tasks, err
 			}
-			report.timecard.rest = time.Duration(t.Hour())*time.Hour + time.Duration(t.Minute())*time.Minute
+			timecard.rest = time.Duration(t.Hour())*time.Hour + time.Duration(t.Minute())*time.Minute
 		} else if reTask.MatchString(line) {
 			task, err := parseTask(line, currentCategory)
 			if err != nil {
-				return dailyReport{}, err
+				return timecard, tasks, err
 			}
-			report.tasks = append(report.tasks, task)
+			tasks = append(tasks, task)
 		} else if reCategory.MatchString(line) {
 			currentCategory = reCategory.FindStringSubmatch(line)[1]
 		} else if line == "---" {
 			break
 		}
 	}
-	return report, nil
+	return timecard, tasks, nil
 }
 
 func parseTime(s string) (time.Time, error) {
@@ -67,19 +68,19 @@ func parseTime(s string) (time.Time, error) {
 	return newTime(hour, min, 0), nil
 }
 
-func parseTask(s string, category string) (task, error) {
+func parseTask(s string, category string) (taskItem, error) {
 	re := regexp.MustCompile(`- \[.\] (\d+.\d+h)/(\d+.\d+h) (.+)`)
 	match := re.FindStringSubmatch(s)
 	expect, err := time.ParseDuration(match[1])
 	if err != nil {
-		return task{}, nil
+		return taskItem{}, nil
 	}
 	actual, err := time.ParseDuration(match[2])
 	if err != nil {
-		return task{}, nil
+		return taskItem{}, nil
 	}
 	name := match[3]
-	return task{
+	return taskItem{
 		category:   category,
 		name:       name,
 		expectTime: expect,
