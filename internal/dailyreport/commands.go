@@ -6,8 +6,8 @@ import (
 )
 
 // Create today's daily report
-func Create(dailyReportDirPath string) error {
-	path := getDailyReportFilePath(dailyReportDirPath, time.Now())
+func Create(dirPath string) error {
+	path := getDailyReportFilePath(dirPath, time.Now())
 	if isFileExists(path) {
 		return fmt.Errorf("今日の日報 %s は既に存在します。", path)
 	}
@@ -17,8 +17,11 @@ func Create(dailyReportDirPath string) error {
 }
 
 // Validate worktime in today's daily report
-func Validate(dailyReportDirPath string) error {
-	path := getDailyReportFilePath(dailyReportDirPath, time.Now())
+func Validate(dirPath, filePath string) error {
+	path := getDailyReportFilePath(dirPath, time.Now())
+	if filePath != "" {
+		path = filePath
+	}
 	report, err := readDailyReport(path)
 	if err != nil {
 		return err
@@ -30,7 +33,7 @@ func Validate(dailyReportDirPath string) error {
 }
 
 // Analyze show aggregation of daily reports
-func Analyze(dailyReportDirPath, from, to string) error {
+func Analyze(dirPath, from, to string) error {
 	now := time.Now()
 	fromDate := lastDate(now, time.Monday)
 	if from != "" {
@@ -51,7 +54,7 @@ func Analyze(dailyReportDirPath, from, to string) error {
 	if fromDate.After(toDate) {
 		fromDate, toDate = toDate, fromDate
 	}
-	reports, err := readDailyReports(dailyReportDirPath, fromDate, toDate)
+	reports, err := readDailyReports(dirPath, fromDate, toDate)
 	if err != nil {
 		return err
 	}

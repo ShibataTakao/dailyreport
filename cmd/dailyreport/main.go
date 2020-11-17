@@ -40,9 +40,16 @@ func main() {
 						Required: true,
 						EnvVars:  []string{"DAILYREPORT_PATH"},
 					},
+					&cli.StringFlag{
+						Name:     "filepath",
+						Aliases:  []string{"f"},
+						Usage:    "Path to daily report file. This is conflict to 'path'",
+						Required: false,
+						Value:    "",
+					},
 				},
 				Action: func(c *cli.Context) error {
-					return dailyreport.Validate(c.String("path"))
+					return dailyreport.Validate(c.String("path"), c.String("filepath"))
 				},
 			},
 			{
