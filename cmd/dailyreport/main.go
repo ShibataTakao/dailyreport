@@ -46,8 +46,8 @@ func main() {
 				},
 			},
 			{
-				Name:  "aggregate",
-				Usage: "Aggregate tasks in some daily reports",
+				Name:  "analyze",
+				Usage: "Show aggregation of daily reports",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:     "path",
@@ -58,16 +58,18 @@ func main() {
 					&cli.StringFlag{
 						Name:     "from",
 						Usage:    "Beginning of date range. Format must be yyyymmdd.",
-						Required: true,
+						Required: false,
+						Value:    "",
 					},
 					&cli.StringFlag{
 						Name:     "to",
 						Usage:    "End of date range. Format must be yyyymmdd.",
-						Required: true,
+						Required: false,
+						Value:    "",
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return dailyreport.Aggregate(c.String("path"), c.String("from"), c.String("to"))
+					return dailyreport.Analyze(c.String("path"), c.String("from"), c.String("to"))
 				},
 			},
 		},

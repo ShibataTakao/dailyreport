@@ -29,15 +29,24 @@ func Validate(dailyReportDirPath string) error {
 	return nil
 }
 
-// Aggregate tasks in some daily reports
-func Aggregate(dailyReportDirPath, from, to string) error {
-	fromDate, err := time.Parse("20060102", from)
-	if err != nil {
-		return err
+// Analyze show aggregation of daily reports
+func Analyze(dailyReportDirPath, from, to string) error {
+	now := time.Now()
+	fromDate := lastDate(now, time.Monday)
+	if from != "" {
+		var err error
+		fromDate, err = time.Parse("20060102", from)
+		if err != nil {
+			return err
+		}
 	}
-	toDate, err := time.Parse("20060102", to)
-	if err != nil {
-		return err
+	toDate := nextDate(now, time.Friday)
+	if to != "" {
+		var err error
+		toDate, err = time.Parse("20060102", to)
+		if err != nil {
+			return err
+		}
 	}
 	if fromDate.After(toDate) {
 		fromDate, toDate = toDate, fromDate
@@ -46,13 +55,20 @@ func Aggregate(dailyReportDirPath, from, to string) error {
 	if err != nil {
 		return err
 	}
+
 	for _, report := range reports {
 		fmt.Printf("Found: %s\n", report.path)
 	}
+
+	fmt.Printf("\n## 業務時間\n")
+	fmt.Printf("- 実績 %.2fh\n", reports.tasks().actualWorktime().Hours())
+
+	fmt.Printf("\n## タスク（予定/実績）\n")
 	for _, c := range reports.categories() {
-		fmt.Printf("\n[%s]\n", c)
-		for _, t := range reports.tasksByCategory(c).aggregated() {
-			fmt.Printf("%.2fh / %.2fh  %s\n", t.expectTime.Hours(), t.actualTime.Hours(), t.name)
+		tasks := reports.tasksByCategory(c).aggregated()
+		fmt.Printf("- [ ] %.2fh / %.2fh  %s\n", tasks.expectWorktime().Hours(), tasks.actualWorktime().Hours(), c)
+		for _, t := range tasks {
+			fmt.Printf("    - [ ] %.2fh / %.2fh  %s\n", t.expectTime.Hours(), t.actualTime.Hours(), t.name)
 		}
 	}
 	return nil
