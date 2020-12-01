@@ -12,7 +12,7 @@ func parse(text string) (timecardItem, taskItems, error) {
 	reBegin := regexp.MustCompile(`- 始業 \d{2}:\d{2}`)
 	reEnd := regexp.MustCompile(`- 終業 \d{2}:\d{2}`)
 	reRest := regexp.MustCompile(`- 休憩 \d{2}:\d{2}`)
-	reCategory := regexp.MustCompile(`- \[.\] (.+)`)
+	reCategory := regexp.MustCompile(`^- \[.\] (.+)`)
 	reTask := regexp.MustCompile(`- \[.\] \d+\.\d+h/\d+\.\d+h .+`)
 
 	timecard := timecardItem{}
