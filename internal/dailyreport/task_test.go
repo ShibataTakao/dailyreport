@@ -195,3 +195,114 @@ func TestAggregated(t *testing.T) {
 		})
 	}
 }
+
+func TestMergeIssues(t *testing.T) {
+	tests := []struct {
+		name   string
+		tasks  taskItems
+		issues []issueItem
+		out    taskItems
+	}{
+		{
+			name: "case01",
+			tasks: taskItems{
+				{
+					name:       "name1",
+					category:   "cat1",
+					expectTime: 1 * time.Hour,
+					actualTime: 1 * time.Hour,
+				},
+				{
+					name:       "name3",
+					category:   "cat3",
+					expectTime: 3 * time.Hour,
+					actualTime: 3 * time.Hour,
+				},
+			},
+			issues: []issueItem{
+				{
+					name:      "name1",
+					status:    "status1",
+					createdAt: newTime(0, 0, 1),
+				},
+				{
+					name:      "name2",
+					status:    "status2",
+					createdAt: newTime(0, 0, 2),
+				},
+			},
+			out: taskItems{
+				{
+					name:       "name1",
+					category:   "cat1",
+					expectTime: 1 * time.Hour,
+					actualTime: 1 * time.Hour,
+					status:     "status1",
+					createdAt:  newTime(0, 0, 1),
+				},
+				{
+					name:       "name2",
+					category:   "",
+					expectTime: 0,
+					actualTime: 0,
+					status:     "status2",
+					createdAt:  newTime(0, 0, 2),
+				},
+				{
+					name:       "name3",
+					category:   "cat3",
+					expectTime: 3 * time.Hour,
+					actualTime: 3 * time.Hour,
+					status:     "",
+					createdAt:  time.Now(),
+				},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			actual := tt.tasks.mergeIssues(tt.issues)
+			if len(tt.out) >= 3 && len(actual) >= 3 {
+				tt.out[2].createdAt = actual[2].createdAt
+			}
+			if !reflect.DeepEqual(tt.out, actual) {
+				t.Errorf("Expected is %v but actual is %v", tt.out, actual)
+			}
+		})
+	}
+}
+
+func TestIsDone(t *testing.T) {
+	tests := []struct {
+		name string
+		task taskItem
+		out  bool
+	}{
+		{
+			name: "case01",
+			task: taskItem{
+				name:   "name1",
+				status: "ToDo",
+			},
+			out: false,
+		},
+		{
+			name: "case02",
+			task: taskItem{
+				name:   "name2",
+				status: "Resolved",
+			},
+			out: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			actual := tt.task.isDone()
+			if tt.out != actual {
+				t.Errorf("Expected is %v but actual is %v", tt.out, actual)
+			}
+		})
+	}
+}
