@@ -46,11 +46,11 @@ func readDailyReport(path string) (dailyReport, error) {
 	}, nil
 }
 
-func readDailyReports(dirPath string, from time.Time, to time.Time) (dailyReports, error) {
+func readDailyReports(dirPath string, start time.Time, end time.Time) (dailyReports, error) {
 	reports := dailyReports{}
-	current := from
-	to = to.AddDate(0, 0, 1)
-	for current.Before(to) {
+	current := start
+	end = end.AddDate(0, 0, 1)
+	for current.Before(end) {
 		path := getDailyReportFilePath(dirPath, current)
 		if isFileExists(path) {
 			report, err := readDailyReport(path)

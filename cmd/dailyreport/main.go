@@ -53,8 +53,8 @@ func main() {
 				},
 			},
 			{
-				Name:  "analyze",
-				Usage: "Show aggregation of daily reports",
+				Name:  "report",
+				Usage: "Report tasks in specific category from daily reports and issues",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:     "path",
@@ -63,20 +63,44 @@ func main() {
 						EnvVars:  []string{"DAILYREPORT_PATH"},
 					},
 					&cli.StringFlag{
-						Name:     "from",
-						Usage:    "Beginning of date range. Format must be yyyymmdd.",
-						Required: false,
-						Value:    "",
+						Name:     "category",
+						Usage:    "Task category to report",
+						Required: true,
+						EnvVars:  []string{"DAILYREPORT_REPORT_CATEGORY"},
 					},
 					&cli.StringFlag{
-						Name:     "to",
+						Name:     "start-date",
+						Aliases:  []string{"s"},
+						Usage:    "Beginning of date range. Format must be yyyymmdd.",
+						Required: true,
+					},
+					&cli.StringFlag{
+						Name:     "end-date",
+						Aliases:  []string{"e"},
 						Usage:    "End of date range. Format must be yyyymmdd.",
-						Required: false,
-						Value:    "",
+						Required: true,
+					},
+					&cli.StringFlag{
+						Name:     "trello-app-key",
+						Usage:    "Trello app key",
+						Required: true,
+						EnvVars:  []string{"DAILYREPORT_TRELLO_APP_KEY"},
+					},
+					&cli.StringFlag{
+						Name:     "trello-token",
+						Usage:    "Trello token",
+						Required: true,
+						EnvVars:  []string{"DAILYREPORT_TRELLO_TOKEN"},
+					},
+					&cli.StringFlag{
+						Name:     "trello-queries",
+						Usage:    "Comma separated queries to fetch trello cards",
+						Required: true,
+						EnvVars:  []string{"DAILYREPORT_TRELLO_QUERIES"},
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return dailyreport.Analyze(c.String("path"), c.String("from"), c.String("to"))
+					return dailyreport.Report(c.String("path"), c.String("category"), c.String("start-date"), c.String("end-date"), c.String("trello-app-key"), c.String("trello-token"), c.String("trello-queries"))
 				},
 			},
 		},

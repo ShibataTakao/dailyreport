@@ -2,6 +2,7 @@ package dailyreport
 
 import (
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -32,47 +33,54 @@ func Validate(dirPath, filePath string) error {
 	return nil
 }
 
-// Analyze show aggregation of daily reports
-func Analyze(dirPath, from, to string) error {
-	now := time.Now()
-	fromDate := lastDate(now, time.Monday)
-	if from != "" {
-		var err error
-		fromDate, err = time.Parse("20060102", from)
-		if err != nil {
-			return err
-		}
+// Report tasks in specific category from daily reports and issues
+func Report(dirPath, category, startStr, endStr, trelloAppKey, trelloToken, trelloQueries string) error {
+	start, err := time.Parse("20060102", startStr)
+	if err != nil {
+		return err
 	}
-	toDate := nextDate(now, time.Friday)
-	if to != "" {
-		var err error
-		toDate, err = time.Parse("20060102", to)
-		if err != nil {
-			return err
-		}
+	end, err := time.Parse("20060102", endStr)
+	if err != nil {
+		return err
 	}
-	if fromDate.After(toDate) {
-		fromDate, toDate = toDate, fromDate
+	if start.After(end) {
+		start, end = end, start
 	}
-	reports, err := readDailyReports(dirPath, fromDate, toDate)
+
+	reports, err := readDailyReports(dirPath, start, end)
+	if err != nil {
+		return err
+	}
+	for _, report := range reports {
+		fmt.Printf("Found: %s\n", report.path)
+	}
+	fmt.Println("")
+	tasks := reports.tasksByCategory(category).aggregated()
+
+	issueClient, err := newIssueClient(trelloAppKey, trelloToken)
+	if err != nil {
+		return err
+	}
+	issues, err := issueClient.fetchIssuesbyQueries(strings.Split(trelloQueries, ","))
 	if err != nil {
 		return err
 	}
 
-	for _, report := range reports {
-		fmt.Printf("Found: %s\n", report.path)
+	pairs, err := zipTasksAndIssues(tasks, issues)
+	if err != nil {
+		return err
 	}
 
-	fmt.Printf("\n## 業務時間\n")
-	fmt.Printf("- 実績 %.2fh\n", reports.tasks().actualWorktime().Hours())
+	fmt.Printf("## 工数（実績）\n")
+	fmt.Printf("- %.2fh\n", tasks.actualWorktime().Hours())
 
 	fmt.Printf("\n## タスク（予定/実績）\n")
-	for _, c := range reports.categories() {
-		tasks := reports.tasksByCategory(c).aggregated()
-		fmt.Printf("- [ ] %.2fh / %.2fh  %s\n", tasks.expectWorktime().Hours(), tasks.actualWorktime().Hours(), c)
-		for _, t := range tasks {
-			fmt.Printf("    - [ ] %.2fh / %.2fh  %s\n", t.expectTime.Hours(), t.actualTime.Hours(), t.name)
+	for _, pair := range pairs {
+		status := " "
+		if pair.isDone() {
+			status = "x"
 		}
+		fmt.Printf("- [%s] %.2fh / %.2fh  %s\n", status, pair.expectTime.Hours(), pair.actualTime.Hours(), pair.name)
 	}
 	return nil
 }
