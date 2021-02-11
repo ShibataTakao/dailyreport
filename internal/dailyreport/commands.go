@@ -54,33 +54,25 @@ func Report(dirPath, category, startStr, endStr, trelloAppKey, trelloToken, trel
 	for _, report := range reports {
 		fmt.Printf("Found: %s\n", report.path)
 	}
-	fmt.Println("")
 	tasks := reports.tasksByCategory(category).aggregated()
 
-	issueClient, err := newIssueClient(trelloAppKey, trelloToken)
-	if err != nil {
-		return err
-	}
+	issueClient := newIssueClient(trelloAppKey, trelloToken)
 	issues, err := issueClient.fetchIssuesbyQueries(strings.Split(trelloQueries, ","))
 	if err != nil {
 		return err
 	}
+	tasks = tasks.mergeIssues(issues)
 
-	pairs, err := zipTasksAndIssues(tasks, issues)
-	if err != nil {
-		return err
-	}
-
-	fmt.Printf("## 工数（実績）\n")
+	fmt.Printf("\n## 工数（実績）\n")
 	fmt.Printf("- %.2fh\n", tasks.actualWorktime().Hours())
 
 	fmt.Printf("\n## タスク（予定/実績）\n")
-	for _, pair := range pairs {
+	for _, task := range tasks {
 		status := " "
-		if pair.isDone() {
+		if task.isDone() {
 			status = "x"
 		}
-		fmt.Printf("- [%s] %.2fh / %.2fh  %s\n", status, pair.expectTime.Hours(), pair.actualTime.Hours(), pair.name)
+		fmt.Printf("- [%s] %.2fh / %.2fh  %s\n", status, task.expectTime.Hours(), task.actualTime.Hours(), task.name)
 	}
 	return nil
 }

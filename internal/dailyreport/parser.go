@@ -81,8 +81,8 @@ func parseTask(s string, category string) (taskItem, error) {
 	}
 	name := match[3]
 	return taskItem{
-		category:   category,
 		name:       name,
+		category:   category,
 		expectTime: expect,
 		actualTime: actual,
 	}, nil

@@ -2,14 +2,21 @@ package dailyreport
 
 import (
 	"sort"
+	"strings"
 	"time"
 )
 
 type taskItem struct {
+	name string
+
+	// fields from parsed daily report
 	category   string
-	name       string
 	expectTime time.Duration
 	actualTime time.Duration
+
+	// fields from issue
+	status    string
+	createdAt time.Time
 }
 
 type taskItems []taskItem
@@ -78,4 +85,41 @@ func (tasks taskItems) aggregated() taskItems {
 	}
 	sort.Slice(newTasks, func(i, j int) bool { return newTasks[i].actualTime > newTasks[j].actualTime })
 	return newTasks
+}
+
+func (tasks taskItems) mergeIssues(issues []issueItem) taskItems {
+	newTasks := taskItems{}
+	isTaskPaired := make([]bool, len(tasks))
+	for _, issue := range issues {
+		newTask := taskItem{
+			name:       issue.name,
+			category:   "",
+			expectTime: 0,
+			actualTime: 0,
+			status:     issue.status,
+			createdAt:  issue.createdAt,
+		}
+		for i, task := range tasks {
+			if !isTaskPaired[i] && strings.Contains(issue.name, task.name) {
+				newTask.category = task.category
+				newTask.expectTime = task.expectTime
+				newTask.actualTime = task.actualTime
+				isTaskPaired[i] = true
+				break
+			}
+		}
+		newTasks = append(newTasks, newTask)
+	}
+	for i, task := range tasks {
+		if !isTaskPaired[i] {
+			task.createdAt = time.Now()
+			newTasks = append(newTasks, task)
+		}
+	}
+	sort.Slice(newTasks, func(i, j int) bool { return newTasks[i].createdAt.Before(newTasks[j].createdAt) })
+	return newTasks
+}
+
+func (t taskItem) isDone() bool {
+	return t.status == "Resolved"
 }
