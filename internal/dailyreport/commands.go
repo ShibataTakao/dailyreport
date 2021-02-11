@@ -34,7 +34,7 @@ func Validate(dirPath, filePath string) error {
 }
 
 // Report tasks in specific category from daily reports and issues
-func Report(dirPath, category, startStr, endStr, trelloAppKey, trelloToken, trelloQueries string) error {
+func Report(dirPath, category, startStr, endStr, trelloAppKey, trelloToken, queries string) error {
 	start, err := time.Parse("20060102", startStr)
 	if err != nil {
 		return err
@@ -57,7 +57,7 @@ func Report(dirPath, category, startStr, endStr, trelloAppKey, trelloToken, trel
 	tasks := reports.tasksByCategory(category).aggregated()
 
 	issueClient := newIssueClient(trelloAppKey, trelloToken)
-	issues, err := issueClient.fetchIssuesbyQueries(strings.Split(trelloQueries, ","))
+	issues, err := issueClient.fetchIssuesbyQueries(strings.Split(queries, ","))
 	if err != nil {
 		return err
 	}

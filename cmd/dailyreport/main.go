@@ -93,14 +93,15 @@ func main() {
 						EnvVars:  []string{"DAILYREPORT_TRELLO_TOKEN"},
 					},
 					&cli.StringFlag{
-						Name:     "trello-queries",
+						Name:     "queries",
+						Aliases:  []string{"q"},
 						Usage:    "Comma separated queries to fetch trello cards",
 						Required: true,
 						EnvVars:  []string{"DAILYREPORT_TRELLO_QUERIES"},
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return dailyreport.Report(c.String("path"), c.String("category"), c.String("start-date"), c.String("end-date"), c.String("trello-app-key"), c.String("trello-token"), c.String("trello-queries"))
+					return dailyreport.Report(c.String("path"), c.String("category"), c.String("start-date"), c.String("end-date"), c.String("trello-app-key"), c.String("trello-token"), c.String("queries"))
 				},
 			},
 		},
