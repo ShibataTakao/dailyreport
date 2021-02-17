@@ -73,12 +73,14 @@ func main() {
 						Aliases:  []string{"s"},
 						Usage:    "Beginning of date range. Format must be yyyymmdd.",
 						Required: true,
+						EnvVars:  []string{"DAILYREPORT_REPORT_START_DATE"},
 					},
 					&cli.StringFlag{
 						Name:     "end-date",
 						Aliases:  []string{"e"},
 						Usage:    "End of date range. Format must be yyyymmdd.",
 						Required: true,
+						EnvVars:  []string{"DAILYREPORT_REPORT_END_DATE"},
 					},
 					&cli.StringFlag{
 						Name:     "trello-app-key",
