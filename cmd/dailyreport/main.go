@@ -14,18 +14,18 @@ func main() {
 	app := &cli.App{
 		Name:  "dailyreport",
 		Usage: "Dailyreport manager",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:     "path",
+				Usage:    "Path to daily report directory",
+				Required: true,
+				EnvVars:  []string{"DAILYREPORT_PATH"},
+			},
+		},
 		Commands: []*cli.Command{
 			{
 				Name:  "create",
 				Usage: "Create today's daily report",
-				Flags: []cli.Flag{
-					&cli.StringFlag{
-						Name:     "path",
-						Usage:    "Path to daily report directory",
-						Required: true,
-						EnvVars:  []string{"DAILYREPORT_PATH"},
-					},
-				},
 				Action: func(c *cli.Context) error {
 					return dailyreport.Create(c.String("path"))
 				},
@@ -34,12 +34,6 @@ func main() {
 				Name:  "validate",
 				Usage: "Validate worktime in today's daily report",
 				Flags: []cli.Flag{
-					&cli.StringFlag{
-						Name:     "path",
-						Usage:    "Path to daily report directory",
-						Required: true,
-						EnvVars:  []string{"DAILYREPORT_PATH"},
-					},
 					&cli.StringFlag{
 						Name:     "filepath",
 						Aliases:  []string{"f"},
@@ -56,12 +50,6 @@ func main() {
 				Name:  "report",
 				Usage: "Report tasks in specific category from daily reports and issues",
 				Flags: []cli.Flag{
-					&cli.StringFlag{
-						Name:     "path",
-						Usage:    "Path to daily report directory",
-						Required: true,
-						EnvVars:  []string{"DAILYREPORT_PATH"},
-					},
 					&cli.StringFlag{
 						Name:     "category",
 						Usage:    "Task category to report",
