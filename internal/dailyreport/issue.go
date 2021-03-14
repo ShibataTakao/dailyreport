@@ -46,3 +46,7 @@ func (c issueClient) fetchIssues(queries string) ([]issueItem, error) {
 
 	return issues, nil
 }
+
+func (i issueItem) isDone() bool {
+	return i.status == "処理済み" || i.status == "完了"
+}

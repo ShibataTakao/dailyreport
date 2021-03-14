@@ -68,7 +68,7 @@ func Report(dirPath, category, startStr, endStr, backlogApiKey, backlogBaseUrl, 
 	fmt.Printf("\n## タスク（予定/実績）\n")
 	for _, task := range tasks {
 		status := " "
-		if task.isDone() {
+		if task.done {
 			status = "x"
 		}
 		fmt.Printf("- [%s] %.2fh / %.2fh  %s\n", status, task.expectTime.Hours(), task.actualTime.Hours(), task.name)

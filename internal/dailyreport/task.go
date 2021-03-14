@@ -15,7 +15,7 @@ type taskItem struct {
 	actualTime time.Duration
 
 	// fields from issue
-	status    string
+	done      bool
 	createdAt time.Time
 }
 
@@ -96,7 +96,7 @@ func (tasks taskItems) mergeIssues(issues []issueItem) taskItems {
 			category:   "",
 			expectTime: 0,
 			actualTime: 0,
-			status:     issue.status,
+			done:       issue.isDone(),
 			createdAt:  issue.createdAt,
 		}
 		for i, task := range tasks {
@@ -118,8 +118,4 @@ func (tasks taskItems) mergeIssues(issues []issueItem) taskItems {
 	}
 	sort.Slice(newTasks, func(i, j int) bool { return newTasks[i].createdAt.Before(newTasks[j].createdAt) })
 	return newTasks
-}
-
-func (t taskItem) isDone() bool {
-	return t.status == "Resolved"
 }

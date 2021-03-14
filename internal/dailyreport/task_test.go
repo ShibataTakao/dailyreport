@@ -237,7 +237,7 @@ func TestMergeIssues(t *testing.T) {
 					category:   "cat1",
 					expectTime: 1 * time.Hour,
 					actualTime: 1 * time.Hour,
-					status:     "status1",
+					done:       false,
 					createdAt:  newTime(0, 0, 1),
 				},
 				{
@@ -245,7 +245,7 @@ func TestMergeIssues(t *testing.T) {
 					category:   "",
 					expectTime: 0,
 					actualTime: 0,
-					status:     "status2",
+					done:       false,
 					createdAt:  newTime(0, 0, 2),
 				},
 				{
@@ -253,7 +253,7 @@ func TestMergeIssues(t *testing.T) {
 					category:   "cat3",
 					expectTime: 3 * time.Hour,
 					actualTime: 3 * time.Hour,
-					status:     "",
+					done:       false,
 					createdAt:  time.Now(),
 				},
 			},
@@ -267,40 +267,6 @@ func TestMergeIssues(t *testing.T) {
 				tt.out[2].createdAt = actual[2].createdAt
 			}
 			if !reflect.DeepEqual(tt.out, actual) {
-				t.Errorf("Expected is %v but actual is %v", tt.out, actual)
-			}
-		})
-	}
-}
-
-func TestIsDone(t *testing.T) {
-	tests := []struct {
-		name string
-		task taskItem
-		out  bool
-	}{
-		{
-			name: "case01",
-			task: taskItem{
-				name:   "name1",
-				status: "ToDo",
-			},
-			out: false,
-		},
-		{
-			name: "case02",
-			task: taskItem{
-				name:   "name2",
-				status: "Resolved",
-			},
-			out: true,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			actual := tt.task.isDone()
-			if tt.out != actual {
 				t.Errorf("Expected is %v but actual is %v", tt.out, actual)
 			}
 		})
