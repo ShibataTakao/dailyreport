@@ -26,13 +26,6 @@ $ dailyreport validate
 今日のタスク（実績） = 0.00h
 ```
 
-### Analyze daily-report
-You can show aggregation of daily-reports.
-
-```
-$ dailyreport analyze
-```
-
 ## Install
 ```
 make install
