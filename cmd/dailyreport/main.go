@@ -71,27 +71,27 @@ func main() {
 						EnvVars:  []string{"DAILYREPORT_REPORT_END_DATE"},
 					},
 					&cli.StringFlag{
-						Name:     "trello-app-key",
-						Usage:    "Trello app key",
+						Name:     "backlog-api-key",
+						Usage:    "Backlog api key",
 						Required: true,
-						EnvVars:  []string{"DAILYREPORT_TRELLO_APP_KEY"},
+						EnvVars:  []string{"DAILYREPORT_BACKLOG_API_KEY"},
 					},
 					&cli.StringFlag{
-						Name:     "trello-token",
-						Usage:    "Trello token",
+						Name:     "backlog-base-url",
+						Usage:    "Backlog base URL",
 						Required: true,
-						EnvVars:  []string{"DAILYREPORT_TRELLO_TOKEN"},
+						EnvVars:  []string{"DAILYREPORT_BACKLOG_BASE_URL"},
 					},
 					&cli.StringFlag{
 						Name:     "queries",
 						Aliases:  []string{"q"},
-						Usage:    "Comma separated queries to fetch trello cards",
+						Usage:    "Json array format queries to fetch backlog issues",
 						Required: true,
-						EnvVars:  []string{"DAILYREPORT_TRELLO_QUERIES"},
+						EnvVars:  []string{"DAILYREPORT_BACKLOG_QUERIES"},
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return dailyreport.Report(c.String("path"), c.String("category"), c.String("start-date"), c.String("end-date"), c.String("trello-app-key"), c.String("trello-token"), c.String("queries"))
+					return dailyreport.Report(c.String("path"), c.String("category"), c.String("start-date"), c.String("end-date"), c.String("backlog-api-key"), c.String("backlog-base-url"), c.String("queries"))
 				},
 			},
 		},

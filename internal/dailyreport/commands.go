@@ -2,7 +2,6 @@ package dailyreport
 
 import (
 	"fmt"
-	"strings"
 	"time"
 )
 
@@ -34,7 +33,7 @@ func Validate(dirPath, filePath string) error {
 }
 
 // Report tasks in specific category from daily reports and issues
-func Report(dirPath, category, startStr, endStr, trelloAppKey, trelloToken, queries string) error {
+func Report(dirPath, category, startStr, endStr, backlogApiKey, backlogBaseUrl, queries string) error {
 	start, err := time.Parse("20060102", startStr)
 	if err != nil {
 		return err
@@ -56,8 +55,8 @@ func Report(dirPath, category, startStr, endStr, trelloAppKey, trelloToken, quer
 	}
 	tasks := reports.tasksByCategory(category).aggregated()
 
-	issueClient := newIssueClient(trelloAppKey, trelloToken)
-	issues, err := issueClient.fetchIssuesbyQueries(strings.Split(queries, ","))
+	issueClient := newIssueClient(backlogApiKey, backlogBaseUrl)
+	issues, err := issueClient.fetchIssues(queries)
 	if err != nil {
 		return err
 	}

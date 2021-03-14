@@ -1,15 +1,14 @@
 package dailyreport
 
 import (
+	"encoding/json"
 	"time"
 
-	"github.com/adlio/trello"
+	"github.com/kenzo0107/backlog"
 )
 
 type issueClient struct {
-	client *trello.Client
-	appKey string
-	token  string
+	client *backlog.Client
 }
 
 type issueItem struct {
@@ -18,42 +17,32 @@ type issueItem struct {
 	createdAt time.Time
 }
 
-func newIssueClient(trelloAppKey, trelloToken string) issueClient {
+func newIssueClient(backlogApiKey, backlogBaseUrl string) issueClient {
 	return issueClient{
-		client: trello.NewClient(trelloAppKey, trelloToken),
-		appKey: trelloAppKey,
-		token:  trelloToken,
+		client: backlog.New(backlogApiKey, backlogBaseUrl),
 	}
 }
 
-func (c issueClient) fetchIssuesbyQueries(queries []string) ([]issueItem, error) {
+func (c issueClient) fetchIssues(queries string) ([]issueItem, error) {
+	var options []backlog.GetIssuesOptions
+	if err := json.Unmarshal([]byte(queries), &options); err != nil {
+		return nil, err
+	}
+
 	issues := []issueItem{}
-	for _, query := range queries {
-		i, err := c.fetchIssues(query)
+	for _, option := range options {
+		backlogIssues, err := c.client.GetIssues(&option)
 		if err != nil {
 			return nil, err
 		}
-		issues = append(issues, i...)
+		for _, bi := range backlogIssues {
+			issues = append(issues, issueItem{
+				name:      *bi.Summary,
+				status:    *bi.Status.Name,
+				createdAt: bi.Created.Time,
+			})
+		}
 	}
-	return issues, nil
-}
 
-func (c issueClient) fetchIssues(query string) ([]issueItem, error) {
-	cards, err := c.client.SearchCards(query, map[string]string{
-		"modelType":   "cards",
-		"cards_limit": "1000",
-		"card_list":   "true",
-	})
-	if err != nil {
-		return nil, err
-	}
-	issues := []issueItem{}
-	for _, card := range cards {
-		issues = append(issues, issueItem{
-			name:      card.Name,
-			status:    card.List.Name,
-			createdAt: card.CreatedAt(),
-		})
-	}
 	return issues, nil
 }
