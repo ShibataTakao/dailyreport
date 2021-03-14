@@ -2,6 +2,7 @@ package dailyreport
 
 import (
 	"fmt"
+	"sort"
 	"time"
 )
 
@@ -54,6 +55,7 @@ func Report(dirPath, category, startStr, endStr, backlogApiKey, backlogBaseUrl, 
 		fmt.Printf("Found: %s\n", report.path)
 	}
 	tasks := reports.tasksByCategory(category).aggregated()
+	sort.Slice(tasks, func(i, j int) bool { return tasks[i].actualTime > tasks[j].actualTime })
 
 	issueClient := newIssueClient(backlogApiKey, backlogBaseUrl)
 	issues, err := issueClient.fetchIssues(queries)
@@ -61,6 +63,7 @@ func Report(dirPath, category, startStr, endStr, backlogApiKey, backlogBaseUrl, 
 		return err
 	}
 	tasks = tasks.mergeIssues(issues)
+	sort.Slice(tasks, func(i, j int) bool { return tasks[i].createdAt.Before(tasks[j].createdAt) })
 
 	fmt.Printf("\n## 工数（実績）\n")
 	fmt.Printf("- %.2fh\n", tasks.actualWorktime().Hours())

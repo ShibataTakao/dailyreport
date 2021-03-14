@@ -1,7 +1,6 @@
 package dailyreport
 
 import (
-	"sort"
 	"strings"
 	"time"
 )
@@ -83,7 +82,6 @@ func (tasks taskItems) aggregated() taskItems {
 			newTasks = append(newTasks, task)
 		}
 	}
-	sort.Slice(newTasks, func(i, j int) bool { return newTasks[i].actualTime > newTasks[j].actualTime })
 	return newTasks
 }
 
@@ -116,6 +114,5 @@ func (tasks taskItems) mergeIssues(issues []issueItem) taskItems {
 			newTasks = append(newTasks, task)
 		}
 	}
-	sort.Slice(newTasks, func(i, j int) bool { return newTasks[i].createdAt.Before(newTasks[j].createdAt) })
 	return newTasks
 }
