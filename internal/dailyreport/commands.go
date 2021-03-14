@@ -34,7 +34,7 @@ func Validate(dirPath, filePath string) error {
 }
 
 // Report tasks in specific category from daily reports and issues
-func Report(dirPath, category, startStr, endStr, backlogApiKey, backlogBaseUrl, queries string) error {
+func Report(dirPath, category, startStr, endStr, backlogApiKey, backlogBaseUrl, backlogQueries string) error {
 	start, err := time.Parse("20060102", startStr)
 	if err != nil {
 		return err
@@ -58,7 +58,7 @@ func Report(dirPath, category, startStr, endStr, backlogApiKey, backlogBaseUrl, 
 	sort.Slice(tasks, func(i, j int) bool { return tasks[i].actualTime > tasks[j].actualTime })
 
 	issueClient := newIssueClient(backlogApiKey, backlogBaseUrl)
-	issues, err := issueClient.fetchIssues(queries)
+	issues, err := issueClient.fetchIssues(backlogQueries)
 	if err != nil {
 		return err
 	}

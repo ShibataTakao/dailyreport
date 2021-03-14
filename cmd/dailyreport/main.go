@@ -83,7 +83,7 @@ func main() {
 						EnvVars:  []string{"DR_BACKLOG_BASE_URL"},
 					},
 					&cli.StringFlag{
-						Name:     "queries",
+						Name:     "backlog-queries",
 						Aliases:  []string{"q"},
 						Usage:    "Json array format queries to fetch backlog issues",
 						Required: true,
@@ -91,7 +91,7 @@ func main() {
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return dailyreport.Report(c.String("path"), c.String("category"), c.String("start-date"), c.String("end-date"), c.String("backlog-api-key"), c.String("backlog-base-url"), c.String("queries"))
+					return dailyreport.Report(c.String("path"), c.String("category"), c.String("start-date"), c.String("end-date"), c.String("backlog-api-key"), c.String("backlog-base-url"), c.String("backlog-queries"))
 				},
 			},
 		},
