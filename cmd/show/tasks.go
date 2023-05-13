@@ -53,18 +53,20 @@ func NewShowTasksCommand() *cobra.Command {
 			tasks = append(tasks, dailyReportTasks...)
 
 			// Get tasks from backlog.
-			backlogApp := backlog.NewApplicationService(backlog.NewRepository(backlogAPIKey, backlogURL))
-			backlogTasks, err := backlogApp.GetTasks(backlogQuery)
-			if err != nil {
-				return err
-			}
-			if backlogProjectOverwrite != "" {
-				prj := task.NewProject(backlogProjectOverwrite)
-				for i := range backlogTasks {
-					backlogTasks[i].Project = prj
+			if backlogAPIKey != "" {
+				backlogApp := backlog.NewApplicationService(backlog.NewRepository(backlogAPIKey, backlogURL))
+				backlogTasks, err := backlogApp.GetTasks(backlogQuery)
+				if err != nil {
+					return err
 				}
+				if backlogProjectOverwrite != "" {
+					prj := task.NewProject(backlogProjectOverwrite)
+					for i := range backlogTasks {
+						backlogTasks[i].Project = prj
+					}
+				}
+				tasks = append(tasks, backlogTasks...)
 			}
-			tasks = append(tasks, backlogTasks...)
 
 			// Filter tasks.
 			if filterByProject != "" {
