@@ -140,7 +140,7 @@ func NewShowTasksCommand() *cobra.Command {
 	command.Flags().StringVar(&backlogAPIKey, "backlog-api-key", os.Getenv("WL_BACKLOG_API_KEY"), "Backlog API key. [$WL_BACKLOG_API_KEY]")
 	command.Flags().StringVar(&backlogURL, "backlog-url", os.Getenv("WL_BACKLOG_URL"), "Backlog URL. [$WL_BACKLOG_URL]")
 	command.Flags().StringVar(&backlogQuery, "backlog-query", os.Getenv("WL_BACKLOG_QUERY"), "Query to get issues from backlog. [$WL_BACKLOG_QUERY]")
-	command.Flags().StringVar(&backlogProjectOverwrite, "backlog-project-overwrite", os.Getenv("WL_BACKLOG_PROJECT_OVERWRITE"), "Project name of issues in backlog will be overwritten by this. [$WL_BACKLOG_PROJECT_OVERWRITE]")
+	command.Flags().StringVar(&backlogProjectOverwrite, "backlog-project-overwrite", os.Getenv("WL_BACKLOG_PROJECT_OVERWRITE"), "This overwrite project name of issues in backlog. [$WL_BACKLOG_PROJECT_OVERWRITE]")
 
 	return command
 }
