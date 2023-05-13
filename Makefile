@@ -1,40 +1,26 @@
-BUILD_TARGET = github.com/ShibataTakao/daily-report/cmd/dailyreport
-FMT_TARGET = $(shell find . -type f -name "*.go")
-LINT_TARGET = $(shell go list ./...)
-TEST_TARGET = ./...
-VERSION = $(shell git describe --tags)
-GOX_OSARCH="darwin/amd64 linux/amd64 windows/amd64"
-GOX_OUTPUT="./release/{{.Dir}}_$(VERSION)_{{.OS}}_{{.Arch}}"
+.PHONY: default setup fmt lint test build install clean
 
 default: build
 
 setup:
-	go get golang.org/x/lint/golint
-	go get golang.org/x/tools/cmd/goimports
-	go get github.com/mitchellh/gox
+	go install golang.org/x/tools/cmd/goimports@latest
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin
 
 fmt:
-	goimports -w $(FMT_TARGET)
-
-checkfmt:
-	test ! -n "$(shell goimports -l $(FMT_TARGET))"
+	go fmt ./...
+	goimports -w $(shell find . -type f -name "*.go")
 
 lint:
-	go vet $(LINT_TARGET)
-	golint $(LINT_TARGET)
+	golangci-lint run
 
 test:
-	go test $(TEST_TARGET)
+	go test ./...
 
 build:
-	go build $(BUILD_TARGET)
+	go build
 
 install:
-	go install $(BUILD_TARGET)
+	go install
 
-release:
-	gox -osarch $(GOX_OSARCH) -output=$(GOX_OUTPUT) $(BUILD_TARGET)
-
-ci: checkfmt lint test build
-
-.PHONY: default setup fmt checkfmt lint test build install release ci
+clean:
+	go clean -testcache
