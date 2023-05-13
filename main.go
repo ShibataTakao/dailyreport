@@ -1,21 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"log"
 
-type stringList []string
-
-func (sl stringList) String() {
-	for _, v := range sl {
-		fmt.Println(v)
-	}
-}
-
-func newStringList() stringList {
-	return stringList{"1", "2"}
-}
+	"github.com/ShibataTakao/worklog/cmd"
+)
 
 func main() {
-	sl := newStringList()
-	sl = append(sl, "3")
-	sl.String()
+	if err := cmd.NewCommand().Execute(); err != nil {
+		log.Fatal(err)
+	}
 }
