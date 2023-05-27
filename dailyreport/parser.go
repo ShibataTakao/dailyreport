@@ -182,7 +182,7 @@ func (p *Parser) Project() (task.Project, error) {
 	if len(matches) != 2 {
 		return task.Project{}, fmt.Errorf("matches for project must have 2 elements but actual is %v", matches)
 	}
-	return newProject(matches[1]), nil
+	return task.NewProject(matches[1]), nil
 }
 
 // Task parse current line and return task in daily report.
@@ -204,15 +204,5 @@ func (p *Parser) Task(project task.Project) (task.Task, error) {
 		return task.Task{}, err
 	}
 	taskName := matches[4]
-	return newTask(taskName, project, estimate, actual, isCompleted), nil
-}
-
-// newProject return new project instance.
-func newProject(name string) task.Project {
-	return task.NewProject(name)
-}
-
-// newTask return new task instance.
-func newTask(name string, project task.Project, estimate time.Duration, actual time.Duration, isCompleted bool) task.Task {
-	return task.NewTask("", name, project, estimate, actual, isCompleted)
+	return task.NewDailyReportTask(taskName, project, estimate, actual, isCompleted), nil
 }

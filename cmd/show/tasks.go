@@ -54,7 +54,7 @@ func NewShowTasksCommand() *cobra.Command {
 
 			// Get tasks from backlog.
 			if backlogAPIKey != "" {
-				backlogApp := backlog.NewApplicationService(backlog.NewRepository(backlogAPIKey, backlogURL))
+				backlogApp := backlog.NewApplicationService(backlog.NewRepository(backlogAPIKey, backlogURL, backlog.NewFactory()))
 				backlogTasks, err := backlogApp.GetTasks(backlogQuery)
 				if err != nil {
 					return err

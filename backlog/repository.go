@@ -5,7 +5,6 @@ import (
 
 	"github.com/ShibataTakao/worklog/task"
 	"github.com/kenzo0107/backlog"
-	"golang.org/x/exp/slices"
 )
 
 var (
@@ -15,18 +14,20 @@ var (
 
 // Repository for backlog.
 type Repository struct {
-	client *backlog.Client
-	cache  map[int]task.Project
+	client  *backlog.Client
+	factory *Factory
+	cache   map[int]task.Project
 }
 
 // GetTasksQuery is query to get tasks.
 type GetTasksQuery []backlog.GetIssuesOptions
 
 // NewRepository return new repository instance.
-func NewRepository(apiKey string, endpoint string) *Repository {
+func NewRepository(apiKey string, endpoint string, factory *Factory) *Repository {
 	return &Repository{
-		client: backlog.New(apiKey, endpoint),
-		cache:  map[int]task.Project{},
+		client:  backlog.New(apiKey, endpoint),
+		factory: factory,
+		cache:   map[int]task.Project{},
 	}
 }
 
@@ -54,7 +55,7 @@ func (r *Repository) GetTasks(query GetTasksQuery) (task.Set, error) {
 			if err != nil {
 				return task.Set{}, err
 			}
-			t := newTask(issue, prj)
+			t := r.factory.NewTask(issue, prj)
 			tasks = append(tasks, t)
 		}
 	}
@@ -71,17 +72,6 @@ func (r *Repository) GetProject(id int) (task.Project, error) {
 	if err != nil {
 		return task.Project{}, err
 	}
-	r.cache[id] = newProject(prj)
+	r.cache[id] = r.factory.NewProject(prj)
 	return r.cache[id], nil
-}
-
-// newProject return new project instance.
-func newProject(prj *backlog.Project) task.Project {
-	return task.NewProject(*prj.Name)
-}
-
-// newTask return new task instance.
-func newTask(issue *backlog.Issue, prj task.Project) task.Task {
-	isCompleted := slices.Contains(CompletedStatusIDs, *issue.Status.ID)
-	return task.NewTask(*issue.IssueKey, *issue.Summary, prj, 0, 0, isCompleted)
 }

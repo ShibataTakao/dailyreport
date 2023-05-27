@@ -29,6 +29,16 @@ func NewTask(key string, name string, project Project, estimate time.Duration, a
 	}
 }
 
+// NewDailyReportTask return new task instance for daily report.
+func NewDailyReportTask(name string, project Project, estimate time.Duration, actual time.Duration, isCompleted bool) Task {
+	return NewTask("", name, project, estimate, actual, isCompleted)
+}
+
+// NewBacklogTask return new task instance for backlog.
+func NewBacklogTask(key string, name string, project Project, isCompleted bool) Task {
+	return NewTask(key, name, project, 0, 0, isCompleted)
+}
+
 // Equals return true if both are same task.
 func (t Task) Equals(other Task) bool {
 	isSameProject := t.Project.Equals(other.Project)
