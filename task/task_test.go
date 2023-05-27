@@ -65,3 +65,29 @@ func TestTaskMerge(t *testing.T) {
 		})
 	}
 }
+
+func TestTaskHasKey(t *testing.T) {
+	tests := []struct {
+		name   string
+		task   Task
+		hasKey bool
+	}{
+		{
+			name:   "HasKey",
+			task:   NewTask("A-1", "Task A", NewProject("Project A"), 1, 2, false),
+			hasKey: true,
+		},
+		{
+			name:   "NotHasKey",
+			task:   NewTask("", "Task A", NewProject("Project A"), 1, 2, false),
+			hasKey: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert := require.New(t)
+			assert.Equal(tt.hasKey, tt.task.HasKey())
+		})
+	}
+}

@@ -2,9 +2,7 @@ package task
 
 import (
 	"fmt"
-	"strings"
 	"time"
-	"unicode/utf8"
 )
 
 // Task.
@@ -42,9 +40,9 @@ func NewBacklogTask(key string, name string, project Project, isCompleted bool) 
 // Equals return true if both are same task.
 func (t Task) Equals(other Task) bool {
 	isSameProject := t.Project.Equals(other.Project)
-	isDifferentTaskName := !strings.Contains(t.Name, other.Name) && !strings.Contains(other.Name, t.Name)
-	isDifferentKey := t.Key != "" && other.Key != "" && t.Key != other.Key
-	return isSameProject && !isDifferentTaskName && !isDifferentKey
+	isSameTaskName := t.Name == other.Name
+	isDifferentKey := t.HasKey() && other.HasKey() && t.Key != other.Key
+	return isSameProject && isSameTaskName && !isDifferentKey
 }
 
 // Merge two tasks into one task.
@@ -55,20 +53,14 @@ func (t Task) Merge(other Task) (Task, error) {
 	}
 
 	var key string
-	if t.Key != "" {
+	if t.HasKey() {
 		key = t.Key
 	} else {
 		key = other.Key
 	}
 
-	var name string
-	if utf8.RuneCountInString(t.Name) < utf8.RuneCountInString(other.Name) {
-		name = t.Name
-	} else {
-		name = other.Name
-	}
-
 	project := t.Project
+	name := t.Name
 	estimate := t.Estimate + other.Estimate
 	actual := t.Actual + other.Actual
 	isCompleted := t.IsCompleted || other.IsCompleted
@@ -79,4 +71,9 @@ func (t Task) Merge(other Task) (Task, error) {
 // Clone task instance
 func (t Task) Clone() Task {
 	return NewTask(t.Key, t.Name, t.Project, t.Estimate, t.Actual, t.IsCompleted)
+}
+
+// HasKey return true if task has key.
+func (t Task) HasKey() bool {
+	return t.Key != ""
 }
