@@ -1,5 +1,7 @@
 package task
 
+import "strings"
+
 // Project.
 type Project struct {
 	Name string
@@ -8,7 +10,7 @@ type Project struct {
 // NewProject return new project instance.
 func NewProject(name string) Project {
 	return Project{
-		Name: name,
+		Name: strings.TrimSpace(name),
 	}
 }
 

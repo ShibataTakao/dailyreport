@@ -2,6 +2,7 @@ package task
 
 import (
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -18,8 +19,8 @@ type Task struct {
 // NewTask return new task instance.
 func NewTask(key string, name string, project Project, estimate time.Duration, actual time.Duration, isCompleted bool) Task {
 	return Task{
-		Key:         key,
-		Name:        name,
+		Key:         strings.TrimSpace(key),
+		Name:        strings.TrimSpace(name),
 		Project:     project,
 		Estimate:    estimate,
 		Actual:      actual,
