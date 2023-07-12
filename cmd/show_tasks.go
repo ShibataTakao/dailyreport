@@ -124,11 +124,7 @@ func NewShowTasksCommand() *cobra.Command {
 				} else {
 					completionMark = " "
 				}
-				if task.Key == "" {
-					fmt.Printf("- [%s] %.2fh / %.2fh [%s] %s\n", completionMark, task.Estimate.Hours(), task.Actual.Hours(), task.Project.Name, task.Name)
-				} else {
-					fmt.Printf("- [%s] %.2fh / %.2fh [%s] [%s] %s\n", completionMark, task.Estimate.Hours(), task.Actual.Hours(), task.Project.Name, task.Key, task.Name)
-				}
+				fmt.Printf("- [%s] %.2fh / %.2fh [%s] %s\n", completionMark, task.Estimate.Hours(), task.Actual.Hours(), task.Project.Name, task.Name)
 			}
 
 			return nil
