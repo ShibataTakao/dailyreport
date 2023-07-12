@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/ShibataTakao/worklog/cmd/show"
 	"github.com/spf13/cobra"
 )
 
@@ -28,7 +27,7 @@ func NewCommand() *cobra.Command {
 		},
 	}
 
-	command.AddCommand(show.NewShowCommand())
+	command.AddCommand(NewShowCommand())
 
 	command.Flags().BoolVar(&silent, "silent", os.Getenv("WL_SILENT") == "true", "If true, do not print logs. [$WL_SILENT]")
 
