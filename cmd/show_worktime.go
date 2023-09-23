@@ -5,47 +5,48 @@ import (
 	"os"
 	"time"
 
-	"github.com/ShibataTakao/worklog/dailyreport"
-	"github.com/ShibataTakao/worklog/task"
+	"github.com/ShibataTakao/dailyreport/dailyreport"
 	"github.com/spf13/cobra"
 )
 
-// NewShowCommand return new `worklog show tasks` sub-command instance.
+// NewShowCommand return new `dailyreport show worktime` sub-command instance.
 func NewShowWorkTimeCommand() *cobra.Command {
 	var (
-		dailyReportDir     string
-		dailyReportStartAt string
-		dailyReportEndAt   string
-		filterByProject    string
+		dir      string
+		startStr string
+		endStr   string
+		project  string
 	)
 
 	command := &cobra.Command{
 		Use:   "worktime",
-		Short: "Show work time in worklog.",
+		Short: "Show work time in daily report.",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// Read from daily reports.
-			dailyReportApp := dailyreport.NewApplicationService(dailyreport.NewRepository(dailyReportDir))
-			start, err := time.Parse("20060102", dailyReportStartAt)
+			// Read daily reports.
+			app := dailyreport.NewApplicationService(dailyreport.NewRepository(dir))
+			start, err := time.Parse("20060102", startStr)
 			if err != nil {
 				return err
 			}
-			end, err := time.Parse("20060102", dailyReportEndAt)
+			end, err := time.Parse("20060102", endStr)
 			if err != nil {
 				return err
 			}
-			reports, err := dailyReportApp.Read(start, end)
+			reports, err := app.Read(start, end)
 			if err != nil {
 				return err
 			}
 
-			// Get tasks from daily report.
+			// Get tasks.
 			tasks, err := reports.Tasks()
 			if err != nil {
 				return err
 			}
-			if filterByProject != "" {
-				prj := task.NewProject(filterByProject)
-				tasks = tasks.Filter(func(t task.Task) bool {
+
+			// Filter tasks.
+			if project != "" {
+				prj := dailyreport.NewProject(project)
+				tasks = tasks.Filter(func(t dailyreport.Task) bool {
 					return t.Project.Equals(prj)
 				})
 			}
@@ -59,10 +60,10 @@ func NewShowWorkTimeCommand() *cobra.Command {
 		},
 	}
 
-	command.Flags().StringVar(&dailyReportDir, "daily-report-dir", os.Getenv("WL_DAILY_REPORT_DIR"), "Directory where daily report file exists. [$WL_DAILY_REPORT_DIR]")
-	command.Flags().StringVarP(&dailyReportStartAt, "daily-report-start-at", "s", os.Getenv("WL_DAILY_REPORT_START_AT"), "Start of daily report date range. [$WL_DAILY_REPORT_START_AT]")
-	command.Flags().StringVarP(&dailyReportEndAt, "daily-report-end-at", "e", os.Getenv("WL_DAILY_REPORT_END_AT"), "End of daily report date range. [$WL_DAILY_REPORT_END_AT]")
-	command.Flags().StringVar(&filterByProject, "filter-by-project", os.Getenv("WL_FILTER_BY_PROJECT"), "Show only tasks which project name is this. [$WL_FILTER_BY_PROJECT]")
+	command.Flags().StringVar(&dir, "dir", os.Getenv("DR_DIR"), "Directory where daily report file exists. [$DR_DIR]")
+	command.Flags().StringVarP(&startStr, "start-at", "s", os.Getenv("DR_START_AT"), "Start of daily report date range. [$DR_START_AT]")
+	command.Flags().StringVarP(&endStr, "end-at", "e", os.Getenv("DR_END_AT"), "End of daily report date range. [$DR_END_AT]")
+	command.Flags().StringVar(&project, "project", os.Getenv("DR_PROJECT"), "Show only tasks which project name is this. [$DR_PROJECT]")
 
 	return command
 }

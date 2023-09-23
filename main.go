@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/ShibataTakao/worklog/cmd"
+	"github.com/ShibataTakao/dailyreport/cmd"
 )
 
 func main() {

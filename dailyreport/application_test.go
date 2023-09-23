@@ -4,7 +4,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ShibataTakao/worklog/task"
 	"github.com/stretchr/testify/require"
 )
 
@@ -22,13 +21,13 @@ func TestApplicationServiceRead(t *testing.T) {
 			start: time.Date(2022, 12, 1, 0, 0, 0, 0, time.Local),
 			end:   time.Date(2023, 2, 1, 0, 0, 0, 0, time.Local),
 			reports: Set{
-				NewDailyReport(
+				New(
 					NewWorkTime(time.Date(2023, 1, 1, 9, 30, 0, 0, time.Local), time.Date(2023, 1, 1, 17, 30, 0, 0, time.Local), 1*time.Hour),
-					task.Set{
-						task.NewTask("", "タスクA", task.NewProject("プロジェクトA"), 2*time.Hour, 2*time.Hour, false),
-						task.NewTask("", "タスクB", task.NewProject("プロジェクトA"), 2*time.Hour, 2*time.Hour, true),
-						task.NewTask("", "タスクA", task.NewProject("プロジェクトB"), 1*time.Hour+30*time.Minute, 1*time.Hour+30*time.Minute, false),
-						task.NewTask("", "タスクB", task.NewProject("プロジェクトB"), 1*time.Hour+30*time.Minute, 1*time.Hour+30*time.Minute, false),
+					TaskSet{
+						NewTask("タスクA", NewProject("プロジェクトA"), 2*time.Hour, 2*time.Hour, false),
+						NewTask("タスクB", NewProject("プロジェクトA"), 2*time.Hour, 2*time.Hour, true),
+						NewTask("タスクA", NewProject("プロジェクトB"), 1*time.Hour+30*time.Minute, 1*time.Hour+30*time.Minute, false),
+						NewTask("タスクB", NewProject("プロジェクトB"), 1*time.Hour+30*time.Minute, 1*time.Hour+30*time.Minute, false),
 					},
 				),
 			},

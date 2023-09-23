@@ -8,15 +8,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// NewCommand return new `worklog` command instance.
+// NewCommand return new `dailyreport` command instance.
 func NewCommand() *cobra.Command {
 	var (
 		silent bool
 	)
 
 	command := &cobra.Command{
-		Use:   "worklog",
-		Short: "CLI tool to control worklog.",
+		Use:   "dailyreport",
+		Short: "CLI tool to control daily report.",
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.HelpFunc()(cmd, args)
 		},
@@ -29,7 +29,7 @@ func NewCommand() *cobra.Command {
 
 	command.AddCommand(NewShowCommand())
 
-	command.Flags().BoolVar(&silent, "silent", os.Getenv("WL_SILENT") == "true", "If true, do not print logs. [$WL_SILENT]")
+	command.Flags().BoolVar(&silent, "silent", os.Getenv("DR_SILENT") == "true", "If true, do not print logs. [$DR_SILENT]")
 
 	return command
 }

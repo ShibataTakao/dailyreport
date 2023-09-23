@@ -4,7 +4,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ShibataTakao/worklog/task"
 	"github.com/stretchr/testify/require"
 )
 
@@ -12,31 +11,31 @@ func TestDailyReportSetTasks(t *testing.T) {
 	tests := []struct {
 		name    string
 		reports Set
-		tasks   task.Set
+		tasks   TaskSet
 	}{
 		{
 			name: "",
 			reports: Set{
-				NewDailyReport(
+				New(
 					NewWorkTime(time.Date(2023, 1, 1, 9, 30, 0, 0, time.Local), time.Date(2023, 1, 1, 17, 30, 0, 0, time.Local), 1*time.Hour),
-					task.Set{
-						task.NewTask("", "Task A", task.NewProject("Project A"), 1, 2, false),
-						task.NewTask("", "Task B", task.NewProject("Project B"), 3, 4, false),
+					TaskSet{
+						NewTask("Task A", NewProject("Project A"), 1, 2, false),
+						NewTask("Task B", NewProject("Project B"), 3, 4, false),
 					},
 				),
-				NewDailyReport(
+				New(
 					NewWorkTime(time.Date(2023, 1, 1, 9, 30, 0, 0, time.Local), time.Date(2023, 1, 1, 17, 30, 0, 0, time.Local), 1*time.Hour),
-					task.Set{
-						task.NewTask("", "Task C", task.NewProject("Project C"), 5, 6, false),
-						task.NewTask("", "Task D", task.NewProject("Project D"), 7, 8, false),
+					TaskSet{
+						NewTask("Task C", NewProject("Project C"), 5, 6, false),
+						NewTask("Task D", NewProject("Project D"), 7, 8, false),
 					},
 				),
 			},
-			tasks: task.Set{
-				task.NewTask("", "Task A", task.NewProject("Project A"), 1, 2, false),
-				task.NewTask("", "Task B", task.NewProject("Project B"), 3, 4, false),
-				task.NewTask("", "Task C", task.NewProject("Project C"), 5, 6, false),
-				task.NewTask("", "Task D", task.NewProject("Project D"), 7, 8, false),
+			tasks: TaskSet{
+				NewTask("Task A", NewProject("Project A"), 1, 2, false),
+				NewTask("Task B", NewProject("Project B"), 3, 4, false),
+				NewTask("Task C", NewProject("Project C"), 5, 6, false),
+				NewTask("Task D", NewProject("Project D"), 7, 8, false),
 			},
 		},
 	}
@@ -60,18 +59,18 @@ func TestDailyReportSetWorkTimes(t *testing.T) {
 		{
 			name: "",
 			reports: Set{
-				NewDailyReport(
+				New(
 					NewWorkTime(time.Date(2023, 1, 1, 9, 30, 0, 0, time.Local), time.Date(2023, 1, 1, 17, 30, 0, 0, time.Local), 1*time.Hour),
-					task.Set{
-						task.NewTask("", "Task A", task.NewProject("Project A"), 1, 2, false),
-						task.NewTask("", "Task B", task.NewProject("Project B"), 3, 4, false),
+					TaskSet{
+						NewTask("Task A", NewProject("Project A"), 1, 2, false),
+						NewTask("Task B", NewProject("Project B"), 3, 4, false),
 					},
 				),
-				NewDailyReport(
+				New(
 					NewWorkTime(time.Date(2023, 1, 1, 9, 30, 0, 0, time.Local), time.Date(2023, 1, 1, 17, 30, 0, 0, time.Local), 1*time.Hour),
-					task.Set{
-						task.NewTask("", "Task C", task.NewProject("Project C"), 5, 6, false),
-						task.NewTask("", "Task D", task.NewProject("Project D"), 7, 8, false),
+					TaskSet{
+						NewTask("Task C", NewProject("Project C"), 5, 6, false),
+						NewTask("Task D", NewProject("Project D"), 7, 8, false),
 					},
 				),
 			},
