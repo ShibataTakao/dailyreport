@@ -1,20 +1,16 @@
 package dailyreport
 
-import (
-	"github.com/ShibataTakao/worklog/task"
-)
-
 // DailyReport.
 type DailyReport struct {
 	WorkTime WorkTime
-	Tasks    task.Set
+	Tasks    TaskSet
 }
 
 // Set of daily reports.
 type Set []DailyReport
 
-// NewDailyReport return new daily report insntace.
-func NewDailyReport(workTime WorkTime, tasks task.Set) DailyReport {
+// New return new daily report insntace.
+func New(workTime WorkTime, tasks TaskSet) DailyReport {
 	return DailyReport{
 		WorkTime: workTime,
 		Tasks:    tasks,
@@ -22,8 +18,8 @@ func NewDailyReport(workTime WorkTime, tasks task.Set) DailyReport {
 }
 
 // Tasks return set of task in daily report set.
-func (s Set) Tasks() (task.Set, error) {
-	tasks := task.Set{}
+func (s Set) Tasks() (TaskSet, error) {
+	tasks := TaskSet{}
 	for _, r := range s {
 		tasks = append(tasks, r.Tasks...)
 	}

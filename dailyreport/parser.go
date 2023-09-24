@@ -7,8 +7,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/ShibataTakao/worklog/task"
 )
 
 const (
@@ -58,8 +56,8 @@ func NewParser(text string, date time.Time) *Parser {
 func (p *Parser) Parse() (DailyReport, error) {
 	var startAt, endAt time.Time
 	var breakTime time.Duration
-	var project task.Project
-	var tasks task.Set
+	var project Project
+	var tasks TaskSet
 	for p.Next() && p.Kind() != HorizontalRuleLine {
 		var err error
 		switch p.Kind() {
@@ -72,7 +70,7 @@ func (p *Parser) Parse() (DailyReport, error) {
 		case ProjectLine:
 			project, err = p.Project()
 		case TaskLine:
-			var task task.Task
+			var task Task
 			task, err = p.Task(project)
 			tasks = append(tasks, task)
 		}
@@ -80,7 +78,7 @@ func (p *Parser) Parse() (DailyReport, error) {
 			return DailyReport{}, err
 		}
 	}
-	return NewDailyReport(NewWorkTime(startAt, endAt, breakTime), tasks), nil
+	return New(NewWorkTime(startAt, endAt, breakTime), tasks), nil
 }
 
 // Next advance parser to next line.
@@ -174,35 +172,35 @@ func (p *Parser) BreakTime() (time.Duration, error) {
 }
 
 // Project parse current line and return project of tasks in daily report.
-func (p *Parser) Project() (task.Project, error) {
+func (p *Parser) Project() (Project, error) {
 	if p.Kind() != ProjectLine {
-		return task.Project{}, fmt.Errorf("'%s' is not ProjectLine", p.Line())
+		return Project{}, fmt.Errorf("'%s' is not ProjectLine", p.Line())
 	}
 	matches := rePproject.FindStringSubmatch(p.Line())
 	if len(matches) != 2 {
-		return task.Project{}, fmt.Errorf("matches for project must have 2 elements but actual is %v", matches)
+		return Project{}, fmt.Errorf("matches for project must have 2 elements but actual is %v", matches)
 	}
-	return task.NewProject(matches[1]), nil
+	return NewProject(matches[1]), nil
 }
 
 // Task parse current line and return task in daily report.
-func (p *Parser) Task(project task.Project) (task.Task, error) {
+func (p *Parser) Task(project Project) (Task, error) {
 	if p.Kind() != TaskLine {
-		return task.Task{}, fmt.Errorf("'%s' is not TaskLine", p.Line())
+		return Task{}, fmt.Errorf("'%s' is not TaskLine", p.Line())
 	}
 	matches := reTask.FindStringSubmatch(p.Line())
 	if len(matches) != 5 {
-		return task.Task{}, fmt.Errorf("matches for task must have 6 elements but actual is %v", matches)
+		return Task{}, fmt.Errorf("matches for task must have 6 elements but actual is %v", matches)
 	}
 	isCompleted := matches[1] == "x"
 	estimate, err := time.ParseDuration(matches[2])
 	if err != nil {
-		return task.Task{}, err
+		return Task{}, err
 	}
 	actual, err := time.ParseDuration(matches[3])
 	if err != nil {
-		return task.Task{}, err
+		return Task{}, err
 	}
 	taskName := matches[4]
-	return task.NewDailyReportTask(taskName, project, estimate, actual, isCompleted), nil
+	return NewTask(taskName, project, estimate, actual, isCompleted), nil
 }
