@@ -20,7 +20,7 @@ func NewCommand() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.HelpFunc()(cmd, args)
 		},
-		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		PersistentPreRun: func(_ *cobra.Command, _ []string) {
 			if silent {
 				log.SetOutput(io.Discard)
 			}

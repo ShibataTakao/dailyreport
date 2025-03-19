@@ -21,7 +21,7 @@ func NewShowTasksCommand() *cobra.Command {
 	command := &cobra.Command{
 		Use:   "tasks",
 		Short: "Show tasks in daily report.",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			// Read daily reports.
 			app := dailyreport.NewApplicationService(dailyreport.NewRepository(dir))
 			start, err := time.Parse("20060102", startStr)
