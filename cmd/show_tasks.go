@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cmp"
 	"fmt"
 	"os"
 	"time"
@@ -58,11 +59,11 @@ func NewShowTasksCommand() *cobra.Command {
 			}
 
 			// Sort tasks.
-			tasks = tasks.Sort(func(a dailyreport.Task, b dailyreport.Task) bool {
+			tasks = tasks.Sort(func(a dailyreport.Task, b dailyreport.Task) int {
 				if !a.Project.Equals(b.Project) {
-					return a.Project.Name < b.Project.Name
+					return cmp.Compare(a.Project.Name, b.Project.Name)
 				}
-				return a.Name < b.Name
+				return cmp.Compare(a.Name, b.Name)
 			})
 
 			// Show tasks.

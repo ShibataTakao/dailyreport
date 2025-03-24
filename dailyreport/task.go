@@ -121,7 +121,7 @@ func (s TaskSet) Filter(filter func(Task) bool) TaskSet {
 }
 
 // Sort tasks in task set and return new task set instance.
-func (s TaskSet) Sort(less func(Task, Task) bool) TaskSet {
+func (s TaskSet) Sort(less func(Task, Task) int) TaskSet {
 	set := s.Clone()
 	slices.SortFunc(set, less)
 	return set

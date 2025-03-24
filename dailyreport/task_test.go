@@ -1,6 +1,7 @@
 package dailyreport
 
 import (
+	"cmp"
 	"testing"
 	"time"
 
@@ -185,7 +186,7 @@ func TestTaskSetSort(t *testing.T) {
 	tests := []struct {
 		name string
 		in   TaskSet
-		less func(Task, Task) bool
+		less func(Task, Task) int
 		out  TaskSet
 	}{
 		{
@@ -195,11 +196,11 @@ func TestTaskSetSort(t *testing.T) {
 				NewTask("Task A", NewProject("Project B"), 3, 4, false),
 				NewTask("Task B", NewProject("Project A"), 5, 6, true),
 			},
-			less: func(a Task, b Task) bool {
+			less: func(a Task, b Task) int {
 				if !a.Project.Equals(b.Project) {
-					return a.Project.Name < b.Project.Name
+					return cmp.Compare(a.Project.Name, b.Project.Name)
 				}
-				return a.Name < b.Name
+				return cmp.Compare(a.Name, b.Name)
 			},
 			out: TaskSet{
 				NewTask("Task A", NewProject("Project A"), 1, 2, false),
