@@ -2,7 +2,7 @@
 .DEFAULT_GOAL := build
 
 lint:
-	golangci-lint run
+	go tool golangci-lint run
 
 test:
 	go test ./...
