@@ -20,6 +20,8 @@ func newCommand() *cobra.Command {
 		Use:   "dailyreport",
 		Short: "Aggregate daily reports.",
 		RunE: func(_ *cobra.Command, _ []string) error {
+			repository := dailyreport.NewRepository(dir)
+			app := dailyreport.NewApplicationService(repository)
 			start, err := time.Parse("20060102", startStr)
 			if err != nil {
 				return err
@@ -28,18 +30,15 @@ func newCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-
-			repository := dailyreport.NewRepository(dir)
-			app := dailyreport.NewApplicationService(repository)
-
 			aggregated, err := app.Read(start, end)
 			if err != nil {
 				return err
 			}
 			fmt.Println(aggregated)
-
 			return nil
 		},
+		SilenceErrors: true,
+		SilenceUsage:  true,
 	}
 
 	now := time.Now()
