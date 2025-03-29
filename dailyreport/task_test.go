@@ -17,20 +17,20 @@ func TestTaskEquals(t *testing.T) {
 	}{
 		{
 			name:   "TasksAreSame",
-			t1:     NewTask("Task A", NewProject("Project A"), 0, 1, false),
-			t2:     NewTask("Task A", NewProject("Project A"), 2, 3, true),
+			t1:     newTask("Task A", NewProject("Project A"), 0, 1, false),
+			t2:     newTask("Task A", NewProject("Project A"), 2, 3, true),
 			equals: true,
 		},
 		{
 			name:   "TaskNameIsDifferent",
-			t1:     NewTask("Task A", NewProject("Project A"), 0, 1, false),
-			t2:     NewTask("Task B", NewProject("Project A"), 2, 3, true),
+			t1:     newTask("Task A", NewProject("Project A"), 0, 1, false),
+			t2:     newTask("Task B", NewProject("Project A"), 2, 3, true),
 			equals: false,
 		},
 		{
 			name:   "ProjectIsDifferent",
-			t1:     NewTask("Task A", NewProject("Project A"), 0, 1, false),
-			t2:     NewTask("Task A", NewProject("Project B"), 2, 3, true),
+			t1:     newTask("Task A", NewProject("Project A"), 0, 1, false),
+			t2:     newTask("Task A", NewProject("Project B"), 2, 3, true),
 			equals: false,
 		},
 	}
@@ -52,9 +52,9 @@ func TestTaskMerge(t *testing.T) {
 	}{
 		{
 			name:   "TasksAreSame",
-			t1:     NewTask("Task A", NewProject("Project A"), 1, 2, false),
-			t2:     NewTask("Task A", NewProject("Project A"), 3, 4, true),
-			merged: NewTask("Task A", NewProject("Project A"), 4, 6, true),
+			t1:     newTask("Task A", NewProject("Project A"), 1, 2, false),
+			t2:     newTask("Task A", NewProject("Project A"), 3, 4, true),
+			merged: newTask("Task A", NewProject("Project A"), 4, 6, true),
 		},
 	}
 
@@ -77,13 +77,13 @@ func TestTaskSetUnion(t *testing.T) {
 		{
 			name: "Union",
 			in: TaskSet{
-				NewTask("Task A", NewProject("Project A"), 1, 2, false),
-				NewTask("Task A", NewProject("Project B"), 3, 4, false),
-				NewTask("Task A", NewProject("Project A"), 5, 6, true),
+				newTask("Task A", NewProject("Project A"), 1, 2, false),
+				newTask("Task A", NewProject("Project B"), 3, 4, false),
+				newTask("Task A", NewProject("Project A"), 5, 6, true),
 			},
 			out: TaskSet{
-				NewTask("Task A", NewProject("Project A"), 6, 8, true),
-				NewTask("Task A", NewProject("Project B"), 3, 4, false),
+				newTask("Task A", NewProject("Project A"), 6, 8, true),
+				newTask("Task A", NewProject("Project B"), 3, 4, false),
 			},
 		},
 	}
@@ -107,9 +107,9 @@ func TestTaskSetEstimate(t *testing.T) {
 		{
 			name: "Estimate",
 			set: TaskSet{
-				NewTask("Task A", NewProject("Project A"), 1, 2, false),
-				NewTask("Task A", NewProject("Project B"), 3, 4, false),
-				NewTask("Task A", NewProject("Project A"), 5, 6, true),
+				newTask("Task A", NewProject("Project A"), 1, 2, false),
+				newTask("Task A", NewProject("Project B"), 3, 4, false),
+				newTask("Task A", NewProject("Project A"), 5, 6, true),
 			},
 			estimate: 9,
 		},
@@ -132,9 +132,9 @@ func TestTaskSetActual(t *testing.T) {
 		{
 			name: "Actual",
 			set: TaskSet{
-				NewTask("Task A", NewProject("Project A"), 1, 2, false),
-				NewTask("Task A", NewProject("Project B"), 3, 4, false),
-				NewTask("Task A", NewProject("Project A"), 5, 6, true),
+				newTask("Task A", NewProject("Project A"), 1, 2, false),
+				newTask("Task A", NewProject("Project B"), 3, 4, false),
+				newTask("Task A", NewProject("Project A"), 5, 6, true),
 			},
 			actual: 12,
 		},
@@ -158,17 +158,17 @@ func TestTaskSetFilter(t *testing.T) {
 		{
 			name: "Filter",
 			in: TaskSet{
-				NewTask("Task A", NewProject("Project A"), 1, 2, false),
-				NewTask("Task A", NewProject("Project B"), 3, 4, false),
-				NewTask("Task A", NewProject("Project A"), 5, 6, true),
+				newTask("Task A", NewProject("Project A"), 1, 2, false),
+				newTask("Task A", NewProject("Project B"), 3, 4, false),
+				newTask("Task A", NewProject("Project A"), 5, 6, true),
 			},
 			filter: func(task Task) bool {
 				prj := NewProject("Project A")
 				return task.Project.Equals(prj)
 			},
 			out: TaskSet{
-				NewTask("Task A", NewProject("Project A"), 1, 2, false),
-				NewTask("Task A", NewProject("Project A"), 5, 6, true),
+				newTask("Task A", NewProject("Project A"), 1, 2, false),
+				newTask("Task A", NewProject("Project A"), 5, 6, true),
 			},
 		},
 	}
@@ -192,20 +192,20 @@ func TestTaskSetSort(t *testing.T) {
 		{
 			name: "Filter",
 			in: TaskSet{
-				NewTask("Task A", NewProject("Project A"), 1, 2, false),
-				NewTask("Task A", NewProject("Project B"), 3, 4, false),
-				NewTask("Task B", NewProject("Project A"), 5, 6, true),
+				newTask("Task A", NewProject("Project A"), 1, 2, false),
+				newTask("Task A", NewProject("Project B"), 3, 4, false),
+				newTask("Task B", NewProject("Project A"), 5, 6, true),
 			},
 			less: func(a Task, b Task) int {
 				if !a.Project.Equals(b.Project) {
 					return cmp.Compare(a.Project.Name, b.Project.Name)
 				}
-				return cmp.Compare(a.Name, b.Name)
+				return cmp.Compare(a.Summary, b.Summary)
 			},
 			out: TaskSet{
-				NewTask("Task A", NewProject("Project A"), 1, 2, false),
-				NewTask("Task B", NewProject("Project A"), 5, 6, true),
-				NewTask("Task A", NewProject("Project B"), 3, 4, false),
+				newTask("Task A", NewProject("Project A"), 1, 2, false),
+				newTask("Task B", NewProject("Project A"), 5, 6, true),
+				newTask("Task A", NewProject("Project B"), 3, 4, false),
 			},
 		},
 	}

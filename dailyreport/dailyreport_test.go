@@ -19,23 +19,23 @@ func TestDailyReportSetTasks(t *testing.T) {
 				New(
 					NewWorkTime(time.Date(2023, 1, 1, 9, 30, 0, 0, time.Local), time.Date(2023, 1, 1, 17, 30, 0, 0, time.Local), 1*time.Hour),
 					TaskSet{
-						NewTask("Task A", NewProject("Project A"), 1, 2, false),
-						NewTask("Task B", NewProject("Project B"), 3, 4, false),
+						newTask("Task A", NewProject("Project A"), 1, 2, false),
+						newTask("Task B", NewProject("Project B"), 3, 4, false),
 					},
 				),
 				New(
 					NewWorkTime(time.Date(2023, 1, 1, 9, 30, 0, 0, time.Local), time.Date(2023, 1, 1, 17, 30, 0, 0, time.Local), 1*time.Hour),
 					TaskSet{
-						NewTask("Task C", NewProject("Project C"), 5, 6, false),
-						NewTask("Task D", NewProject("Project D"), 7, 8, false),
+						newTask("Task C", NewProject("Project C"), 5, 6, false),
+						newTask("Task D", NewProject("Project D"), 7, 8, false),
 					},
 				),
 			},
 			tasks: TaskSet{
-				NewTask("Task A", NewProject("Project A"), 1, 2, false),
-				NewTask("Task B", NewProject("Project B"), 3, 4, false),
-				NewTask("Task C", NewProject("Project C"), 5, 6, false),
-				NewTask("Task D", NewProject("Project D"), 7, 8, false),
+				newTask("Task A", NewProject("Project A"), 1, 2, false),
+				newTask("Task B", NewProject("Project B"), 3, 4, false),
+				newTask("Task C", NewProject("Project C"), 5, 6, false),
+				newTask("Task D", NewProject("Project D"), 7, 8, false),
 			},
 		},
 	}
@@ -62,15 +62,15 @@ func TestDailyReportSetWorkTimes(t *testing.T) {
 				New(
 					NewWorkTime(time.Date(2023, 1, 1, 9, 30, 0, 0, time.Local), time.Date(2023, 1, 1, 17, 30, 0, 0, time.Local), 1*time.Hour),
 					TaskSet{
-						NewTask("Task A", NewProject("Project A"), 1, 2, false),
-						NewTask("Task B", NewProject("Project B"), 3, 4, false),
+						newTask("Task A", NewProject("Project A"), 1, 2, false),
+						newTask("Task B", NewProject("Project B"), 3, 4, false),
 					},
 				),
 				New(
 					NewWorkTime(time.Date(2023, 1, 1, 9, 30, 0, 0, time.Local), time.Date(2023, 1, 1, 17, 30, 0, 0, time.Local), 1*time.Hour),
 					TaskSet{
-						NewTask("Task C", NewProject("Project C"), 5, 6, false),
-						NewTask("Task D", NewProject("Project D"), 7, 8, false),
+						newTask("Task C", NewProject("Project C"), 5, 6, false),
+						newTask("Task D", NewProject("Project D"), 7, 8, false),
 					},
 				),
 			},

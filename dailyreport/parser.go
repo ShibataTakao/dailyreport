@@ -202,5 +202,5 @@ func (p *Parser) Task(project Project) (Task, error) {
 		return Task{}, err
 	}
 	taskName := matches[4]
-	return NewTask(taskName, project, estimate, actual, isCompleted), nil
+	return newTask(taskName, project, estimate, actual, isCompleted), nil
 }

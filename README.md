@@ -7,6 +7,7 @@ CLI tool to control daily report.
 ## Usage
 
 ### Show work time
+
 ```
 Show work time in daily report.
 
@@ -22,6 +23,7 @@ Flags:
 ```
 
 ### Show tasks
+
 ```
 Show tasks in daily report.
 
@@ -37,6 +39,7 @@ Flags:
 ```
 
 ## Install
+
 ```
-go install github.com/ShibataTakao/dailyreport@master
+go install github.com/ShibataTakao/dailyreport/cmd/dailyreport@main
 ```

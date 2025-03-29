@@ -30,11 +30,11 @@ func newCommand() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			aggregated, err := app.Read(start, end)
+			analysis, err := app.Analyze(start, end)
 			if err != nil {
 				return err
 			}
-			fmt.Println(aggregated)
+			fmt.Println(analysis)
 			return nil
 		},
 		SilenceErrors: true,

@@ -42,10 +42,10 @@ func TestRepositoryParse(t *testing.T) {
 			report: New(
 				NewWorkTime(time.Date(2023, 1, 1, 9, 30, 0, 0, time.Local), time.Date(2023, 1, 1, 17, 30, 0, 0, time.Local), 1*time.Hour),
 				TaskSet{
-					NewTask("タスクA", NewProject("プロジェクトA"), 2*time.Hour, 2*time.Hour, false),
-					NewTask("タスクB", NewProject("プロジェクトA"), 2*time.Hour, 2*time.Hour, true),
-					NewTask("タスクA", NewProject("プロジェクトB"), 1*time.Hour+30*time.Minute, 1*time.Hour+30*time.Minute, false),
-					NewTask("タスクB", NewProject("プロジェクトB"), 1*time.Hour+30*time.Minute, 1*time.Hour+30*time.Minute, false),
+					newTask("タスクA", NewProject("プロジェクトA"), 2*time.Hour, 2*time.Hour, false),
+					newTask("タスクB", NewProject("プロジェクトA"), 2*time.Hour, 2*time.Hour, true),
+					newTask("タスクA", NewProject("プロジェクトB"), 1*time.Hour+30*time.Minute, 1*time.Hour+30*time.Minute, false),
+					newTask("タスクB", NewProject("プロジェクトB"), 1*time.Hour+30*time.Minute, 1*time.Hour+30*time.Minute, false),
 				},
 			),
 		},
